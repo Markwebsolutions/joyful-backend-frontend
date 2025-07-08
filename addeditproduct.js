@@ -1,5 +1,5 @@
-const baseUrl = "http://localhost:8080/products";
-const subcategoryUrl = "http://localhost:8080/subcategories";
+const baseUrl = "https://joyful-backend-backend-production.up.railway.app/products";
+const subcategoryUrl = "https://joyful-backend-backend-production.up.railway.app/subcategories";
 
 let allSubcategories = [];
 let selectedSubcategoryIds = [];
@@ -59,7 +59,7 @@ function handleOutsideClick(e) {
     dropdown.style.display = "none";
   }
 }
-const categoryUrl = "http://localhost:8080/categories";
+const categoryUrl = "https://joyful-backend-backend-production.up.railway.app/categories";
 let allCategories = [];
 let selectedCategoryIds = [];
 async function loadCategories() {
