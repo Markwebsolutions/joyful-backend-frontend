@@ -125,6 +125,17 @@ async function bulkAutofillAndSubmit(data) {
         // Build product object (same as handleAddProductSubmit)
         const tags = (prod.producttags || []);
         const variantsMap = prod.variantsMap ? (typeof prod.variantsMap === "string" ? prod.variantsMap : JSON.stringify(prod.variantsMap)) : JSON.stringify({Size:[],Color:[],Capacity:[]});
+        // Find the correct subcategoryId and categoryId from backend data
+        let subcatId = null, catId = null;
+        // Find category by name
+        const catObj = allCategories.find(c => c.name === cat.name);
+        if (catObj) catId = catObj.id;
+        // Find subcategory by name and category
+        let subcatObj = null;
+        if (catId && allSubcategories && allSubcategories.length) {
+          subcatObj = allSubcategories.find(s => s.name === sub.name && s.categories && s.categories.some(ca => ca.id === catId));
+        }
+        if (subcatObj) subcatId = subcatObj.id;
         const product = {
           name: prod.name,
           description: prod.description,
@@ -135,7 +146,7 @@ async function bulkAutofillAndSubmit(data) {
           metadescription: prod.metadescription,
           pagekeywords: prod.pagekeywords,
           ispublished: prod.ispublished,
-          subcategories: selectedSubcategoryIds.map((id) => ({ id })),
+          subcategories: subcatId ? [{ id: subcatId }] : [],
           variantsMap: variantsMap,
         };
         // Submit to backend
