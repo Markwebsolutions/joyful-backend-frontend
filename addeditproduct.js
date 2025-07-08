@@ -605,36 +605,28 @@ async function loadProductForEdit(id) {
       }
     });
     // ✅ Prefill variantsMap (Size, Color, Capacity)
+    // Always clear previous variants
+    document.getElementById("variantFieldsContainer").innerHTML = "";
     if (product.variantsMap) {
       let vm = {};
       try {
-        vm =
-          typeof product.variantsMap === "string"
-            ? JSON.parse(product.variantsMap)
-            : product.variantsMap;
+        vm = typeof product.variantsMap === "string" ? JSON.parse(product.variantsMap) : product.variantsMap;
       } catch (err) {
         console.error("Invalid variantsMap JSON", err);
       }
-
       // Reuse existing addVariantField logic
       if (vm.Size && Array.isArray(vm.Size)) {
         vm.Size.forEach((entry) => {
           const variantId = `variant-${variantIndex++}`;
           const html = `
-        <div class="variant-block" data-type="Size" id="${variantId}" style="display:flex; align-items:center; gap:10px; margin-bottom:10px; border:1px solid #ccc; padding:10px; border-radius:6px;">
-          <strong style="min-width:60px;">Size</strong>
-          <input type="text" placeholder="Enter size" class="variant-size" value="${
-            entry.value || ""
-          }" required style="flex:1;" />
-          <input type="url" placeholder="Image URL (optional)" class="variant-image" value="${
-            entry.image || ""
-          }" style="flex:2;" />
-          <button type="button" onclick="removeVariant('${variantId}')" title="Remove">❌</button>
+        <div class=\"variant-block\" data-type=\"Size\" id=\"${variantId}\" style=\"display:flex; align-items:center; gap:10px; margin-bottom:10px; border:1px solid #ccc; padding:10px; border-radius:6px;\">
+          <strong style=\"min-width:60px;\">Size</strong>
+          <input type=\"text\" placeholder=\"Enter size\" class=\"variant-size\" value=\"${entry.value || ""}\" required style=\"flex:1;\" />
+          <input type=\"url\" placeholder=\"Image URL (optional)\" class=\"variant-image\" value=\"${entry.image || ""}\" style=\"flex:2;\" />
+          <button type=\"button\" onclick=\"removeVariant('${variantId}')\" title=\"Remove\">❌</button>
         </div>
       `;
-          document
-            .getElementById("variantFieldsContainer")
-            .insertAdjacentHTML("beforeend", html);
+          document.getElementById("variantFieldsContainer").insertAdjacentHTML("beforeend", html);
         });
       }
 
@@ -642,26 +634,16 @@ async function loadProductForEdit(id) {
         vm.Color.forEach((entry) => {
           const variantId = `variant-${variantIndex++}`;
           const html = `
-        <div class="variant-block" data-type="Color" id="${variantId}" style="display:flex; align-items:center; gap:10px; margin-bottom:10px; border:1px solid #ccc; padding:10px; border-radius:6px;">
-          <strong style="min-width:60px;">Color</strong>
-          <input type="color" class="variant-color-hex" value="${
-            entry.hex || "#000000"
-          }" required style="width:40px; height:40px; border:none; cursor:pointer;" onchange="updateHexDisplay(this, '${variantId}')" />
-          <span id="${variantId}-hex-code" style="width:80px;">${
-            entry.hex || "#000000"
-          }</span>
-          <input type="text" placeholder="Color Name" class="variant-color-name" value="${
-            entry.name || ""
-          }" required style="flex:1;" />
-          <input type="url" placeholder="Image URL (required)" class="variant-image" value="${
-            entry.image || ""
-          }" required style="flex:2;" />
-          <button type="button" onclick="removeVariant('${variantId}')" title="Remove">❌</button>
+        <div class=\"variant-block\" data-type=\"Color\" id=\"${variantId}\" style=\"display:flex; align-items:center; gap:10px; margin-bottom:10px; border:1px solid #ccc; padding:10px; border-radius:6px;\">
+          <strong style=\"min-width:60px;\">Color</strong>
+          <input type=\"color\" class=\"variant-color-hex\" value=\"${entry.hex || "#000000"}\" required style=\"width:40px; height:40px; border:none; cursor:pointer;\" onchange=\"updateHexDisplay(this, '${variantId}')\" />
+          <span id=\"${variantId}-hex-code\" style=\"width:80px;\">${entry.hex || "#000000"}</span>
+          <input type=\"text\" placeholder=\"Color Name\" class=\"variant-color-name\" value=\"${entry.name || ""}\" required style=\"flex:1;\" />
+          <input type=\"url\" placeholder=\"Image URL (required)\" class=\"variant-image\" value=\"${entry.image || ""}\" required style=\"flex:2;\" />
+          <button type=\"button\" onclick=\"removeVariant('${variantId}')\" title=\"Remove\">❌</button>
         </div>
       `;
-          document
-            .getElementById("variantFieldsContainer")
-            .insertAdjacentHTML("beforeend", html);
+          document.getElementById("variantFieldsContainer").insertAdjacentHTML("beforeend", html);
         });
       }
 
@@ -669,20 +651,14 @@ async function loadProductForEdit(id) {
         vm.Capacity.forEach((entry) => {
           const variantId = `variant-${variantIndex++}`;
           const html = `
-        <div class="variant-block" data-type="Capacity" id="${variantId}" style="display:flex; align-items:center; gap:10px; margin-bottom:10px; border:1px solid #ccc; padding:10px; border-radius:6px;">
-          <strong style="min-width:80px;">Capacity</strong>
-          <input type="text" placeholder="Enter capacity" class="variant-capacity" value="${
-            entry.value || ""
-          }" required style="flex:1;" />
-          <input type="url" placeholder="Image URL (optional)" class="variant-image" value="${
-            entry.image || ""
-          }" style="flex:2;" />
-          <button type="button" onclick="removeVariant('${variantId}')" title="Remove">❌</button>
+        <div class=\"variant-block\" data-type=\"Capacity\" id=\"${variantId}\" style=\"display:flex; align-items:center; gap:10px; margin-bottom:10px; border:1px solid #ccc; padding:10px; border-radius:6px;\">
+          <strong style=\"min-width:80px;\">Capacity</strong>
+          <input type=\"text\" placeholder=\"Enter capacity\" class=\"variant-capacity\" value=\"${entry.value || ""}\" required style=\"flex:1;\" />
+          <input type=\"url\" placeholder=\"Image URL (optional)\" class=\"variant-image\" value=\"${entry.image || ""}\" style=\"flex:2;\" />
+          <button type=\"button\" onclick=\"removeVariant('${variantId}')\" title=\"Remove\">❌</button>
         </div>
       `;
-          document
-            .getElementById("variantFieldsContainer")
-            .insertAdjacentHTML("beforeend", html);
+          document.getElementById("variantFieldsContainer").insertAdjacentHTML("beforeend", html);
         });
       }
     }
