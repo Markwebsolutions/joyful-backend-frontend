@@ -1,7 +1,7 @@
-const categoryUrl = "http://localhost:8080/categories";
-const subcategoryUrl = "http://localhost:8080/subcategories";
-const productUrl = "http://localhost:8080/products";
-const enquiryUrl = "http://localhost:8080/enquiries";
+const categoryUrl = "https://joyful-backend-backend-production.up.railway.app/categories";
+const subcategoryUrl = "https://joyful-backend-backend-production.up.railway.app/subcategories";
+const productUrl = "https://joyful-backend-backend-production.up.railway.app/products";
+const enquiryUrl = "https://joyful-backend-backend-production.up.railway.app/enquiries";
 
 async function loadCategoryCount() {
   try {
