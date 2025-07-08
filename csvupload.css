@@ -1,0 +1,226 @@
+/* global.css */
+:root {
+  --primary-bg: #f8fafc;
+  --secondary-bg: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --accent-primary: #2563eb;
+  --accent-secondary: #0ea5e9;
+  --glass-bg: rgba(255, 255, 255, 0.95);
+  --glass-border: rgba(148, 163, 184, 0.2);
+  --hover-overlay: rgba(59, 130, 246, 0.05);
+  --shadow-glass: 0 4px 6px rgba(0, 0, 0, 0.05);
+  --border-radius: 8px;
+  --transition: all 0.2s ease;
+  --success-color: #10b981;
+  --danger-color: #ef4444;
+  --warning-color: #f59e0b;
+}
+
+a {
+  text-decoration: none;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--primary-bg);
+  min-height: 100vh;
+  color: var(--text-primary);
+  position: relative;
+}
+
+/* csvupload.css */
+.csvuploader {
+  margin: 2rem;
+  display: flex;
+  justify-content: center;
+}
+.upload-btn {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-glass);
+}
+
+/* Styled file label (acts like button) */
+.upload-btn .file-label {
+  padding: 0.5rem 1rem;
+  background: var(--secondary-bg);
+  color: var(--text-secondary);
+  border: 1px dashed var(--glass-border);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: 500;
+  transition: var(--transition);
+  text-align: center;
+}
+
+/* Hover effect for label */
+.upload-btn .file-label:hover {
+  color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  background: var(--hover-overlay);
+}
+
+/* Hide native file input */
+.upload-btn input[type="file"] {
+  display: none;
+}
+
+/* Buttons wrapper: places buttons in one row */
+.upload-btn .button-group {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-between;
+}
+
+/* Buttons themselves */
+.upload-btn .button-group button {
+  flex: 1;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+/* Autofill Button */
+.upload-btn .button-group button:first-child {
+  background: var(--accent-primary);
+  color: white;
+}
+
+.upload-btn .button-group button:first-child:hover {
+  background: #1d4ed8;
+}
+
+/* Submit Button */
+.upload-btn .button-group button:last-child {
+  background: var(--success-color);
+  color: white;
+}
+
+.upload-btn .button-group button:last-child:hover {
+  background: #0d9b6c;
+}
+
+.show-table {
+  width: 100%;
+}
+/* Table Styles */
+.preview-table {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto 3rem;
+  border-collapse: collapse;
+  background: var(--secondary-bg);
+  box-shadow: var(--shadow-glass);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.preview-table thead {
+  background: var(--accent-primary);
+  color: white;
+  text-align: center;
+}
+
+.preview-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  text-align: center;
+}
+
+.preview-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--glass-border);
+  vertical-align: top;
+  text-align: center;
+}
+
+.preview-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.preview-table tbody tr:hover {
+  background: var(--hover-overlay);
+}
+
+.preview-table tbody tr:nth-child(even) {
+  background: var(--glass-bg);
+}
+
+.preview-table tbody tr:nth-child(even):hover {
+  background: var(--hover-overlay);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-container {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav-menu {
+    width: 100%;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .csvuploader {
+    padding: 1rem;
+    margin: 1rem;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .preview-table {
+    margin: 0 1rem 2rem;
+  }
+
+  .preview-table th,
+  .preview-table td {
+    padding: 0.75rem;
+  }
+}
+@media (max-width: 768px) {
+  .upload-btn {
+    width: 100%;
+  }
+}
+#error-popup {
+  animation: fadeOut 3s forwards;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
