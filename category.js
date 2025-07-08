@@ -1,4 +1,4 @@
-const baseUrl = "http://localhost:8080/categories";
+const baseUrl = "https://joyful-backend-backend-production.up.railway.app/categories";
 const categoryMap = new Map(); // Stores id -> category object
 let addQuill;
 let editQuill;
