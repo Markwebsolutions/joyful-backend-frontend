@@ -2,9 +2,9 @@
   "name": "my-static-site",
   "version": "1.0.0",
   "scripts": {
-    "start": "serve . -s -l 3000 -n -c 0 --single Login.html"
+    "start": "node server.js"
   },
   "dependencies": {
-    "serve": "^14.2.0"
+    "express": "^4.18.2"
   }
 }
