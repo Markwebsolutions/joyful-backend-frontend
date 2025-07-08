@@ -54,7 +54,7 @@
 
     <script src="Logout.js"></script>
     <script>
-      const enquiryUrl = "http://localhost:8080/enquiries";
+      const enquiryUrl = "https://joyful-backend-backend-production.up.railway.app//enquiries";
 
       window.onload = () => {
         getAllEnquiries();
@@ -106,7 +106,7 @@
         if (!confirmDelete) return;
 
         try {
-          const res = await fetch(`http://localhost:8080/enquiries/${id}`, {
+          const res = await fetch(`https://joyful-backend-backend-production.up.railway.app/enquiries/${id}`, {
             method: "DELETE",
           });
           const json = await res.json();
