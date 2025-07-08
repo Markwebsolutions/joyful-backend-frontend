@@ -2,7 +2,7 @@
   "name": "my-static-site",
   "version": "1.0.0",
   "scripts": {
-    "start": "serve ."
+    "start": "serve . -s -l 3000 -n -c 0 --single Login.html"
   },
   "dependencies": {
     "serve": "^14.2.0"
