@@ -59,7 +59,7 @@ function handleOutsideClick(e) {
     dropdown.style.display = "none";
   }
 }
-const categoryUrl = "http://localhost:8080/categories";
+const categoryUrl = "https://joyful-backend-backend-production.up.railway.app/categories";
 let allCategories = [];
 let selectedCategoryIds = [];
 async function loadCategories() {
