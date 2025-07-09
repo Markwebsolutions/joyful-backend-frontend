@@ -4,11 +4,24 @@ let addQuill;
 let editQuill;
 
 function convertGoogleDriveLink(url) {
-  const match = url.match(/https:\/\/drive\.google\.com\/file\/d\/([^/]+)\//);
-  if (match) {
-    const fileId = match[1];
-    return `https://drive.google.com/uc?export=view&id=${fileId}`;
+  if (!url) return url;
+  
+  // Handle direct link format
+  const directMatch = url.match(/https:\/\/drive\.google\.com\/uc\?.*id=([^&]+)/);
+  if (directMatch) return url;
+  
+  // Handle file view link format
+  const fileMatch = url.match(/https:\/\/drive\.google\.com\/file\/d\/([^/]+)/);
+  if (fileMatch) {
+    return `https://drive.google.com/uc?export=view&id=${fileMatch[1]}`;
   }
+  
+  // Handle open?id= format
+  const openMatch = url.match(/https:\/\/drive\.google\.com\/open\?id=([^&]+)/);
+  if (openMatch) {
+    return `https://drive.google.com/uc?export=view&id=${openMatch[1]}`;
+  }
+  
   return url;
 }
 
@@ -16,8 +29,20 @@ function previewImage() {
   let imageUrl = document.getElementById("addImageLink").value.trim();
   imageUrl = convertGoogleDriveLink(imageUrl);
   const preview = document.getElementById("imagePreview");
-  preview.style.display = imageUrl ? "block" : "none";
-  preview.src = imageUrl;
+  if (preview) {
+    preview.style.display = imageUrl ? "block" : "none";
+    preview.src = imageUrl;
+  }
+}
+
+function editPreviewImage() {
+  let imageUrl = document.getElementById("editImageLink").value.trim();
+  imageUrl = convertGoogleDriveLink(imageUrl);
+  const preview = document.getElementById("editImagePreview");
+  if (preview) {
+    preview.style.display = imageUrl ? "block" : "none";
+    preview.src = imageUrl;
+  }
 }
 
 window.onload = () => {
@@ -53,61 +78,70 @@ window.onload = () => {
 };
 
 async function getAllCategories() {
-  const res = await fetch(baseUrl);
-  const data = await res.json();
-  document.getElementById("categoryCount").textContent = `Total Categories: ${data.length}`;
+  try {
+    const res = await fetch(baseUrl);
+    const data = await res.json();
+    document.getElementById("categoryCount").textContent = `Total Categories: ${data.length}`;
 
-  const tableBody = document.getElementById("categoryTableBody");
-  tableBody.innerHTML = "";
-  categoryMap.clear();
+    const tableBody = document.getElementById("categoryTableBody");
+    tableBody.innerHTML = "";
+    categoryMap.clear();
 
-  data.forEach((cat) => {
-    categoryMap.set(cat.id, cat);
+    data.forEach((cat) => {
+      categoryMap.set(cat.id, cat);
 
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td class="cell-name">${cat.name}</td>
-      <td class="cell-image">
-        <div class="image-container">
-          <img src="${cat.imagelink || ""}"
-              alt="${cat.name}"
-              loading="lazy"
-              onerror="this.onerror=null;this.src='https://dummyimage.com/100x100/cccccc/000000&text=No+Image';">
-          <div class="image-loader"></div>
-        </div>
-      </td>
-      <td class="cell-status">
-        <span class="status-badge ${cat.published ? "published" : "draft"}">
-          ${cat.published ? "Published" : "Draft"}
-        </span>
-      </td>
-      <td class="cell-actions">
-        <div class="action-buttons">
-          <button class="edit-btn" onclick="handleEditClick(${cat.id})">Edit</button>
-          <button class="delete-btn" onclick="deleteCategory(${cat.id})">Delete</button>
-        </div>
-      </td>
-    `;
-    tableBody.appendChild(row);
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td class="cell-name">${cat.name}</td>
+        <td class="cell-image">
+          <div class="image-container">
+            <img src="${convertGoogleDriveLink(cat.imagelink) || ''}"
+                alt="${cat.name}"
+                loading="lazy"
+                onerror="this.onerror=null;this.src='https://dummyimage.com/100x100/cccccc/000000&text=No+Image';">
+            <div class="image-loader"></div>
+          </div>
+        </td>
+        <td class="cell-status">
+          <span class="status-badge ${cat.published ? "published" : "draft"}">
+            ${cat.published ? "Published" : "Draft"}
+          </span>
+        </td>
+        <td class="cell-actions">
+          <div class="action-buttons">
+            <button class="edit-btn" onclick="handleEditClick(${cat.id})">Edit</button>
+            <button class="delete-btn" onclick="deleteCategory(${cat.id})">Delete</button>
+          </div>
+        </td>
+      `;
+      tableBody.appendChild(row);
 
-    const img = row.querySelector(".image-container img");
-    const container = row.querySelector(".image-container");
-    container.classList.add("loading");
+      const img = row.querySelector(".image-container img");
+      const container = row.querySelector(".image-container");
+      container.classList.add("loading");
 
-    if (img.complete) {
-      img.classList.add("loaded");
-      container.classList.remove("loading");
-    } else {
-      img.addEventListener("load", () => {
-        img.classList.add("loaded");
-        container.classList.remove("loading");
-      });
-      img.addEventListener("error", () => {
-        img.classList.add("loaded");
-        container.classList.remove("loading");
-      });
-    }
-  });
+      // Set a timeout before checking if image loaded
+      setTimeout(() => {
+        if (img.complete && img.naturalHeight !== 0) {
+          img.classList.add("loaded");
+          container.classList.remove("loading");
+        } else {
+          img.addEventListener("load", () => {
+            img.classList.add("loaded");
+            container.classList.remove("loading");
+          });
+          img.addEventListener("error", () => {
+            img.src = "https://dummyimage.com/100x100/cccccc/000000&text=No+Image";
+            img.classList.add("loaded");
+            container.classList.remove("loading");
+          });
+        }
+      }, 100);
+    });
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    showCustomAlert("Failed to load categories. Please try again.");
+  }
 }
 
 function openAddModal() {
@@ -123,7 +157,10 @@ function closeAddModal() {
 
 function handleEditClick(id) {
   const cat = categoryMap.get(id);
-  if (!cat) return alert("Category not found!");
+  if (!cat) {
+    showCustomAlert("Category not found!");
+    return;
+  }
   editCategory(cat);
 }
 
@@ -131,15 +168,22 @@ function editCategory(cat) {
   document.getElementById("editId").value = cat.id;
   document.getElementById("editName").value = cat.name;
   editQuill.root.innerHTML = cat.description || "";
-  document.getElementById("editSearchKeywords").value = cat.searchkeywords;
-  document.getElementById("editImageLink").value = cat.imagelink;
-  document.getElementById("editSeoTitle").value = cat.seotitle;
-  document.getElementById("editSeoKeywords").value = cat.seokeywords;
-  document.getElementById("editSeoDescription").value = cat.seodescription;
+  document.getElementById("editSearchKeywords").value = cat.searchkeywords || "";
+  document.getElementById("editImageLink").value = cat.imagelink || "";
+  document.getElementById("editSeoTitle").value = cat.seotitle || "";
+  document.getElementById("editSeoKeywords").value = cat.seokeywords || "";
+  document.getElementById("editSeoDescription").value = cat.seodescription || "";
 
-  document.querySelector(
-    `input[name="editStatus"][value="${cat.published ? "PUBLISHED" : "DRAFT"}"]`
-  ).checked = true;
+  // Set the correct radio button based on published status
+  const publishedValue = cat.published ? "PUBLISHED" : "DRAFT";
+  document.querySelector(`input[name="editStatus"][value="${publishedValue}"]`).checked = true;
+
+  // Show image preview if image exists
+  if (cat.imagelink) {
+    const preview = document.getElementById("editImagePreview");
+    preview.src = convertGoogleDriveLink(cat.imagelink);
+    preview.style.display = "block";
+  }
 
   document.getElementById("editModal").style.display = "flex";
 }
@@ -147,79 +191,97 @@ function editCategory(cat) {
 document.getElementById("editForm").addEventListener("submit", async function (e) {
   e.preventDefault();
 
-  const id = document.getElementById("editId").value;
-  const name = document.getElementById("editName").value;
-  const description = editQuill.root.innerHTML.trim();
-  const searchkeywords = document.getElementById("editSearchKeywords").value;
-  const imagelink = convertGoogleDriveLink(document.getElementById("editImageLink").value.trim());
-  const seotitle = document.getElementById("editSeoTitle").value;
-  const seokeywords = document.getElementById("editSeoKeywords").value;
-  const seodescription = document.getElementById("editSeoDescription").value;
+  try {
+    const id = document.getElementById("editId").value;
+    const name = document.getElementById("editName").value;
+    const description = editQuill.root.innerHTML.trim();
+    const searchkeywords = document.getElementById("editSearchKeywords").value;
+    const imagelink = convertGoogleDriveLink(document.getElementById("editImageLink").value.trim());
+    const seotitle = document.getElementById("editSeoTitle").value;
+    const seokeywords = document.getElementById("editSeoKeywords").value;
+    const seodescription = document.getElementById("editSeoDescription").value;
 
-  const statusValue = document.querySelector('input[name="editStatus"]:checked').value;
-  const published = statusValue === "PUBLISHED";
+    const statusValue = document.querySelector('input[name="editStatus"]:checked').value;
+    const published = statusValue === "PUBLISHED";
 
-  const categoryData = {
-    name,
-    description,
-    searchkeywords,
-    imagelink,
-    seotitle,
-    seokeywords,
-    seodescription,
-    published,
-  };
+    const categoryData = {
+      name,
+      description,
+      searchkeywords,
+      imagelink,
+      seotitle,
+      seokeywords,
+      seodescription,
+      published,
+    };
 
-  await fetch(`${baseUrl}/${id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(categoryData),
-  });
+    const response = await fetch(`${baseUrl}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(categoryData),
+    });
 
-  console.log("Submitting category data:", categoryData);
-  closeEditModal();
-  getAllCategories();
+    if (!response.ok) {
+      throw new Error("Failed to update category");
+    }
+
+    closeEditModal();
+    getAllCategories();
+  } catch (error) {
+    console.error("Error updating category:", error);
+    showCustomAlert("Failed to update category. Please try again.");
+  }
 });
 
 document.getElementById("addForm").addEventListener("submit", async function (e) {
   e.preventDefault();
 
-  const name = document.getElementById("addName").value.trim();
-  const description = addQuill.root.innerHTML.trim();
-  const searchkeywords = document.getElementById("addSearchKeywords").value.trim();
-  const rawLink = document.getElementById("addImageLink").value.trim();
-  const imagelink = convertGoogleDriveLink(rawLink);
-  const seotitle = document.getElementById("addSeoTitle").value.trim();
-  const seokeywords = document.getElementById("addSeoKeywords").value.trim();
-  const seodescription = document.getElementById("addSeoDescription").value.trim();
+  try {
+    const name = document.getElementById("addName").value.trim();
+    const description = addQuill.root.innerHTML.trim();
+    const searchkeywords = document.getElementById("addSearchKeywords").value.trim();
+    const rawLink = document.getElementById("addImageLink").value.trim();
+    const imagelink = convertGoogleDriveLink(rawLink);
+    const seotitle = document.getElementById("addSeoTitle").value.trim();
+    const seokeywords = document.getElementById("addSeoKeywords").value.trim();
+    const seodescription = document.getElementById("addSeoDescription").value.trim();
 
-  const ispublished = document.querySelector('input[name="publishStatus"]:checked')?.value === "true";
+    const ispublished = document.querySelector('input[name="publishStatus"]:checked')?.value === "true";
 
-  const category = {
-    name,
-    description,
-    searchkeywords,
-    imagelink,
-    seotitle,
-    seokeywords,
-    seodescription,
-    published: ispublished,
-  };
+    const category = {
+      name,
+      description,
+      searchkeywords,
+      imagelink,
+      seotitle,
+      seokeywords,
+      seodescription,
+      published: ispublished,
+    };
 
-  await fetch(baseUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(category),
-  });
+    const response = await fetch(baseUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(category),
+    });
 
-  closeAddModal();
-  getAllCategories();
+    if (!response.ok) {
+      throw new Error("Failed to add category");
+    }
+
+    closeAddModal();
+    getAllCategories();
+  } catch (error) {
+    console.error("Error adding category:", error);
+    showCustomAlert("Failed to add category. Please try again.");
+  }
 });
 
 function closeEditModal() {
   document.getElementById("editModal").style.display = "none";
   document.getElementById("editForm").reset();
   editQuill.setContents([]);
+  document.getElementById("editImagePreview").style.display = "none";
 }
 
 async function deleteCategory(id) {
