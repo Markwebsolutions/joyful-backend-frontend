@@ -40,7 +40,12 @@ function previewMainImage() {
   img.src = url || "";
   img.style.display = url ? "block" : "none";
 }
-
+function previewHoverImage() {
+  const url = document.getElementById("hoverImage").value;
+  const img = document.getElementById("hoverImagePreview");
+  img.src = url || "";
+  img.style.display = url ? "block" : "none";
+}
 function toggleSubcategoryDropdown() {
   if (selectedCategoryIds.length === 0) {
     document.getElementById("subcategoryWarning").style.display = "block";
@@ -286,6 +291,7 @@ async function handleAddProductSubmit(e) {
     name: document.getElementById("productName").value,
     description: quill.root.innerHTML,
     mainimage: document.getElementById("mainImage").value,
+    hoverimage: document.getElementById("hoverImage").value,
     filter: document.getElementById("productFilter").value,
     producttags: tags,
     metatitle: document.getElementById("metaTitle").value,
@@ -322,6 +328,8 @@ async function loadProductForEdit(id) {
     document.getElementById("productName").value = product.name;
     document.getElementById("mainImage").value = product.mainimage;
     previewMainImage();
+    document.getElementById("hoverImage").value = product.hoverimage;
+    previewHoverImage();
     document.getElementById("productFilter").value = product.filter || "";
     document.getElementById("productTags").value = (
       product.producttags || []

@@ -1,73 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Add/Edit Product</title>
-    <link rel="stylesheet" href="Dashboard.css" />
-    <link rel="stylesheet" href="global.css" />
-    <link rel="stylesheet" href="product.css" />
-    <link rel="stylesheet" href="addeditproduct.css" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css"
-      rel="stylesheet"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
-  </head>
 
-  <body>
-    <!-- ✅ NAVBAR SAME AS product.html -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="Dashboard.html" class="logo">AdminPanel</a>
-            <ul class="nav-menu">
-                <li class="nav-item"><a href="Category.html">Category</a></li>
-                <li class="nav-item"><a href="subcategory.html">Sub-Category</a></li>
-                <li class="nav-item"><a href="product.html">Products</a></li>
-                <li class="nav-item">
-                    <a href="productenquiry.html">Product Enquiry</a>
-                </li>
-                <li class="nav-item">
-                    <a href="csvupload.html">Upload CSV</a>
-                </li>
-                <li class="nav-item">
-                    <button class="logout" onclick="logout()">Logout</button>
-                </li>
-            </ul>
-        </div>
-    </nav>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add/Edit Product</title>
+  <link rel="stylesheet" href="Dashboard.css" />
+  <link rel="stylesheet" href="global.css" />
+  <link rel="stylesheet" href="product.css" />
+  <link rel="stylesheet" href="addeditproduct.css" />
+  <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+</head>
 
-    <div class="top-bar container">
-      <h1 class="headings">Add/Edit Product</h1>
-      <a href="product.html" class="add-btn">← Go Back to Products</a>
+<body>
+  <!-- ✅ NAVBAR SAME AS product.html -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="Dashboard.html" class="logo">AdminPanel</a>
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="Category.html">Category</a></li>
+        <li class="nav-item"><a href="subcategory.html">Sub-Category</a></li>
+        <li class="nav-item"><a href="product.html">Products</a></li>
+        <li class="nav-item">
+          <a href="productenquiry.html">Product Enquiry</a>
+        </li>
+        <li class="nav-item">
+          <a href="csvupload.html">Upload CSV</a>
+        </li>
+        <li class="nav-item">
+          <button class="logout" onclick="logout()">Logout</button>
+        </li>
+      </ul>
     </div>
+  </nav>
 
-    <!-- 🧾 FORM CONTENT -->
-    <div
-      class="container"
-      style="max-width: 900px; margin: auto; border: 1px solid #ccc"
-    >
-      <form id="addProductForm" class="modal-form">
-        <div class="form-group">
-          <label><span class="required">*</span>Product Name:</label>
-          <input
-            type="text"
-            id="productName"
-            placeholder="Product Name"
-            required
-          />
-        </div>
-        <div class="form-group inline-sm">
-          <label><span class="required">*</span> Select Category:</label>
-          <div
-            class="custom-multi-select"
-            onclick="toggleCategoryDropdown()"
-            style="position: relative"
-          >
-            <div
-              id="selectedCategories"
-              class="selected-tags"
-              style="
+  <div class="top-bar container">
+    <h1 class="headings">Add/Edit Product</h1>
+    <a href="product.html" class="add-btn">← Go Back to Products</a>
+  </div>
+
+  <!-- 🧾 FORM CONTENT -->
+  <div class="container" style="max-width: 900px; margin: auto; border: 1px solid #ccc">
+    <form id="addProductForm" class="modal-form">
+      <div class="form-group">
+        <label><span class="required">*</span>Product Name:</label>
+        <input type="text" id="productName" placeholder="Product Name" required />
+      </div>
+      <div class="form-group inline-sm">
+        <label><span class="required">*</span> Select Category:</label>
+        <div class="custom-multi-select" onclick="toggleCategoryDropdown()" style="position: relative">
+          <div id="selectedCategories" class="selected-tags" style="
                 display: flex;
                 flex-wrap: wrap;
                 gap: 5px;
@@ -75,12 +58,8 @@
                 border: 1px solid #ccc;
                 padding: 5px;
                 cursor: text;
-              "
-            ></div>
-            <div
-              id="categoryDropdownList"
-              class="dropdown-list"
-              style="
+              "></div>
+          <div id="categoryDropdownList" class="dropdown-list" style="
                 display: none;
                 position: absolute;
                 top: 100%;
@@ -89,27 +68,16 @@
                 background: white;
                 border: 1px solid #ccc;
                 z-index: 10;
-              "
-            ></div>
-          </div>
+              "></div>
         </div>
-        <small
-          id="subcategoryWarning"
-          style="color: red; display: none; margin-top: -8px"
-          >Please select category first.</small
-        >
+      </div>
+      <small id="subcategoryWarning" style="color: red; display: none; margin-top: -8px">Please select category
+        first.</small>
 
-        <div class="form-group inline-sm">
-          <label><span class="required">*</span> Select Subcategory:</label>
-          <div
-            class="subcategory-multi-select"
-            onclick="toggleSubcategoryDropdown()"
-            style="position: relative"
-          >
-            <div
-              id="selectedSubcategories"
-              class="selected-tags"
-              style="
+      <div class="form-group inline-sm">
+        <label><span class="required">*</span> Select Subcategory:</label>
+        <div class="subcategory-multi-select" onclick="toggleSubcategoryDropdown()" style="position: relative">
+          <div id="selectedSubcategories" class="selected-tags" style="
                 display: flex;
                 flex-wrap: wrap;
                 gap: 5px;
@@ -117,12 +85,8 @@
                 border: 1px solid #ccc;
                 padding: 5px;
                 cursor: text;
-              "
-            ></div>
-            <div
-              id="subcategoryDropdownList"
-              class="dropdown-list"
-              style="
+              "></div>
+          <div id="subcategoryDropdownList" class="dropdown-list" style="
                 display: none;
                 position: absolute;
                 top: 100%;
@@ -131,158 +95,119 @@
                 background: white;
                 border: 1px solid #ccc;
                 z-index: 10;
-              "
-            ></div>
-          </div>
+              "></div>
         </div>
-        <div class="form-group">
-          <label><span class="required">*</span> Description:</label>
-          <div id="productDescriptionEditor" style="height: 150px"></div>
-        </div>
+      </div>
+      <div class="form-group">
+        <label><span class="required">*</span> Description:</label>
+        <div id="productDescriptionEditor" style="height: 150px"></div>
+      </div>
 
-        <div class="form-group">
-          <label><span class="required">*</span> Main Image URL:</label>
-          <input
-            type="url"
-            id="mainImage"
-            placeholder="Paste image URL"
-            required
-            oninput="previewMainImage()"
-          />
-          <img
-            id="mainImagePreview"
-            style="
+      <div class="form-group inline-sm">
+        <label><span class="required">*</span> Main Image URL:</label>
+        <input type="url" id="mainImage" placeholder="Paste image URL" required oninput="previewMainImage()" />
+        <img id="mainImagePreview" style="
               width: 50%;
               max-height: 200px;
               margin: 10px 0;
               display: none;
               text-align: center;
               border: 1px solid lightblue;
-            "
-          />
-        </div>
-        <!-- 🧩 VARIANTS SECTION -->
-        <div class="form-group">
-          <label><span class="required">*</span>Variants:</label>
-          <div id="variantFieldsContainer"></div>
-          <button
-            type="button"
-            class="btn-secondary"
-            onclick="showVariantTypeDropdown()"
-            style="margin-top: 8px"
-          >
-            + Add Variant
-          </button>
-          <div
-            id="variantTypeDropdown"
-            class="dropdown-list"
-            style="
+            " />
+      </div>
+      <div class="form-group inline-sm">
+        <label><span class="required">*</span> Hover Image URL:</label>
+        <input type="url" id="hoverImage" placeholder="Paste hover image URL" required oninput="previewHoverImage()" />
+        <img id="hoverImagePreview" style="
+      width: 50%;
+      max-height: 200px;
+      margin: 10px 0;
+      display: none;
+      text-align: center;
+      border: 1px solid lightgreen;
+    " />
+      </div>
+      <!-- 🧩 VARIANTS SECTION -->
+      <div class="form-group">
+        <label><span class="required">*</span>Variants:</label>
+        <div id="variantFieldsContainer"></div>
+        <button type="button" class="btn-secondary" onclick="showVariantTypeDropdown()" style="margin-top: 8px">
+          + Add Variant
+        </button>
+        <div id="variantTypeDropdown" class="dropdown-list" style="
               display: none;
               border: 1px solid #ccc;
               width: 200px;
               background: white;
               z-index: 10;
               position: relative;
-            "
-          >
-            <div
-              onclick="addVariantField('Size')"
-              class="dropdown-item"
-              style="padding: 8px; cursor: pointer"
-            >
-              Size
-            </div>
-            <div
-              onclick="addVariantField('Color')"
-              class="dropdown-item"
-              style="padding: 8px; cursor: pointer"
-            >
-              Color
-            </div>
-            <div
-              onclick="addVariantField('Capacity')"
-              class="dropdown-item"
-              style="padding: 8px; cursor: pointer"
-            >
-              Capacity
-            </div>
+            ">
+          <div onclick="addVariantField('Size')" class="dropdown-item" style="padding: 8px; cursor: pointer">
+            Size
+          </div>
+          <div onclick="addVariantField('Color')" class="dropdown-item" style="padding: 8px; cursor: pointer">
+            Color
+          </div>
+          <div onclick="addVariantField('Capacity')" class="dropdown-item" style="padding: 8px; cursor: pointer">
+            Capacity
           </div>
         </div>
+      </div>
 
-        <div class="form-group inline-sm">
-          <label><span class="required">*</span> Filter:</label>
-          <input
-            type="text"
-            id="productFilter"
-            placeholder="Product Filter"
-            required
-          />
-        </div>
+      <div class="form-group inline-sm">
+        <label><span class="required">*</span> Filter:</label>
+        <input type="text" id="productFilter" placeholder="Product Filter" required />
+      </div>
 
-        <div class="form-group inline-sm">
-          <label><span class="required">*</span> Product Tags:</label>
-          <input
-            type="text"
-            id="productTags"
-            placeholder="Comma-separated tags (eco-friendly, new)"
-            required
-          />
-        </div>
-        <div style="margin-bottom: 10px; width: 100%">
-          <h3
-            style="
+      <div class="form-group inline-sm">
+        <label><span class="required">*</span> Product Tags:</label>
+        <input type="text" id="productTags" placeholder="Comma-separated tags (eco-friendly, new)" required />
+      </div>
+      <div style="margin-bottom: 10px; width: 100%">
+        <h3 style="
               border-bottom: 1px solid rgb(58, 141, 248);
               width: 45px;
               color: rgb(58, 141, 248);
-            "
-          >
-            SEO:
-          </h3>
-        </div>
+            ">
+          SEO:
+        </h3>
+      </div>
 
-        <div class="form-group inline-sm">
-          <label><span class="required">*</span>SEO Meta Title:</label>
-          <input type="text" id="metaTitle" placeholder="Meta Title" required />
+      <div class="form-group inline-sm">
+        <label><span class="required">*</span>SEO Meta Title:</label>
+        <input type="text" id="metaTitle" placeholder="Meta Title" required />
+      </div>
+      <div class="form-group inline-sm">
+        <label><span class="required">*</span> Page Keywords:</label>
+        <input type="text" id="pageKeywords" placeholder="Keywords for SEO" required />
+      </div>
+      <div class="form-group">
+        <label><span class="required">*</span>SEO Meta Description:</label>
+        <textarea id="metaDescription" placeholder="Meta Description" required></textarea>
+      </div>
+      <div class="form-group">
+        <label>Status *</label>
+        <div class="radio-group">
+          <label>
+            <input type="radio" name="ispublished" value="true" required />
+            Published
+          </label>
+          <label>
+            <input type="radio" name="ispublished" value="false" />
+            Draft
+          </label>
         </div>
-        <div class="form-group inline-sm">
-          <label><span class="required">*</span> Page Keywords:</label>
-          <input
-            type="text"
-            id="pageKeywords"
-            placeholder="Keywords for SEO"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label><span class="required">*</span>SEO Meta Description:</label>
-          <textarea
-            id="metaDescription"
-            placeholder="Meta Description"
-            required
-          ></textarea>
-        </div>
-        <div class="form-group">
-          <label>Status *</label>
-          <div class="radio-group">
-            <label>
-              <input type="radio" name="ispublished" value="true" required />
-              Published
-            </label>
-            <label>
-              <input type="radio" name="ispublished" value="false" />
-              Draft
-            </label>
-          </div>
-        </div>
+      </div>
 
-        <div class="form-buttons">
-          <button type="submit" class="btn-primary">Save Product</button>
-          <a href="product.html" class="btn-secondary Cancel">Cancel</a>
-        </div>
-      </form>
-    </div>
+      <div class="form-buttons">
+        <button type="submit" class="btn-primary">Save Product</button>
+        <a href="product.html" class="btn-secondary Cancel">Cancel</a>
+      </div>
+    </form>
+  </div>
 
-    <script src="./Logout.js"></script>
-    <script src="./addeditproduct.js"></script>
-  </body>
+  <script src="./Logout.js"></script>
+  <script src="./addeditproduct.js"></script>
+</body>
+
 </html>
