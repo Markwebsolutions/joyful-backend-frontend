@@ -1,303 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="global.css" />
-    <link rel="stylesheet" href="./category.css" />
-    <!-- Quill CSS -->
-    <link
-      href="https://cdn.quilljs.com/1.3.6/quill.snow.css"
-      rel="stylesheet"
-    />
-    <!-- Quill JS -->
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-    <title>Document</title>
-  </head>
-  <body>
-      <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="Dashboard.html" class="logo">AdminPanel</a>
-            <ul class="nav-menu">
-                <li class="nav-item"><a href="Category.html">Category</a></li>
-                <li class="nav-item"><a href="subcategory.html">Sub-Category</a></li>
-                <li class="nav-item"><a href="product.html">Products</a></li>
-                <li class="nav-item">
-                    <a href="productenquiry.html">Product Enquiry</a>
-                </li>
-                <li class="nav-item">
-                    <a href="csvupload.html">Upload CSV</a>
-                </li>
-                <li class="nav-item">
-                    <button class="logout" onclick="logout()">Logout</button>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    <div class="top-bar container">
-      <h1 class="headings">Category Dashboard</h1>
-      <div class="top-controls">
-        <button class="add-btn" onclick="openAddModal()">
-          <i class="fas fa-plus"></i> + Add Category
-        </button>
-        <div id="categoryCount" class="category-count">Total Category: 0</div>
-      </div>
-    </div>
 
-    <div class="table-container">
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th class="col-name">Name</th>
-              <th class="col-image">Image</th>
-              <th class="col-status">Status</th>
-              <th class="col-actions">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="categoryTableBody">
-            <!-- Data will be inserted here -->
-          </tbody>
-        </table>
-      </div>
-    </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="global.css" />
+  <link rel="stylesheet" href="./category.css" />
+  <!-- Quill CSS -->
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
+  <!-- Quill JS -->
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
-    <!--! Add Modal -->
-    <div id="addModal" class="modal" style="display: none">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2 class="headings">Add Category</h2>
-          <span class="close-btn" onclick="closeAddModal()">&times;</span>
+  <title>Document</title>
+</head>
+
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="Dashboard.html" class="logo">AdminPanel</a>
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="Category.html">Category</a></li>
+        <li class="nav-item"><a href="subcategory.html">Sub-Category</a></li>
+        <li class="nav-item"><a href="product.html">Products</a></li>
+        <li class="nav-item">
+          <a href="productenquiry.html">Product Enquiry</a>
+        </li>
+        <li class="nav-item">
+          <a href="csvupload.html">Upload CSV</a>
+        </li>
+        <li class="nav-item">
+          <button class="logout" onclick="logout()">Logout</button>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="top-bar container">
+    <h1 class="headings">Category Dashboard</h1>
+    <div class="top-controls">
+      <button class="add-btn" onclick="openAddModal()">
+        <i class="fas fa-plus"></i> + Add Category
+      </button>
+      <div id="categoryCount" class="category-count">Total Category: 0</div>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-image">Image</th>
+            <th class="col-status">Status</th>
+            <th class="col-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="categoryTableBody">
+          <!-- Data will be inserted here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!--! Add Modal -->
+  <div id="addModal" class="modal" style="display: none">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="headings">Add Category</h2>
+        <span class="close-btn" onclick="closeAddModal()">&times;</span>
+      </div>
+      <form id="addForm" class="modal-form">
+        <div class="form-group">
+          <label><span class="required">*</span> Category Name:</label>
+          <input type="text" id="addName" placeholder="Category Name" required />
         </div>
-        <form id="addForm" class="modal-form">
-          <div class="form-group">
-            <label><span class="required">*</span> Category Name:</label>
-            <input
-              type="text"
-              id="addName"
-              placeholder="Category Name"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label><span class="required">*</span> Description:</label>
-            <div id="addDescriptionEditor" style="height: 150px"></div>
-          </div>
-          <div class="form-group">
-            <label><span class="required">*</span> Search Keywords:</label>
-            <input
-              type="text"
-              id="addSearchKeywords"
-              placeholder="Search Keywords"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label><span class="required">*</span> Image Link:</label>
-            <input
-              type="url"
-              id="addImageLink"
-              placeholder="Paste image URL"
-              required
-              oninput="previewImage()"
-            />
-            <img
-              id="imagePreview"
-              src=""
-              alt="Preview"
-              style="
+        <div class="form-group">
+          <label><span class="required">*</span> Description:</label>
+
+          <div id="addDescriptionEditor" style="height: 150px"></div>
+        </div>
+        <div class="form-group">
+          <label><span class="required">*</span> Search Keywords:</label>
+          <input type="text" id="addSearchKeywords" placeholder="Search Keywords" required />
+        </div>
+        <div class="form-group">
+          <label><span class="required">*</span> Image Link:</label>
+          <input type="url" id="addImageLink" placeholder="Paste image URL" required oninput="previewImage()" />
+          <img id="imagePreview" src="" alt="Preview" style="
                 width: 50%;
                 max-height: 200px;
                 margin: 10px 0;
                 display: none;
                 text-align: center;
                 border: 1px solid lightblue;
-              "
-            />
-          </div>
-          <div style="margin-bottom: 10px">
-            <h3
-              style="
-                border-bottom: 1px solid rgb(58, 141, 248);
-                width: 45px;
-                color: rgb(58, 141, 248);
-              "
-            >
-              SEO:
-            </h3>
-          </div>
-          <div class="form-group">
-            <label><span class="required">*</span> SEO Meta Title:</label>
-            <input
-              type="text"
-              id="addSeoTitle"
-              placeholder="SEO Title"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label><span class="required">*</span> SEO Keywords:</label>
-            <input
-              type="text"
-              id="addSeoKeywords"
-              placeholder="SEO Keywords (comma separated)"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label><span class="required">*</span> SEO Meta Description:</label>
-            <input
-              type="text"
-              id="addSeoDescription"
-              placeholder="SEO Description"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label>Status:</label>
-            <div class="radio-group">
-              <label>
-                Publish
-                <input type="radio" name="publishStatus" value="true" checked />
-                Draft
-                <input type="radio" name="publishStatus" value="false" />
-              </label>
-            </div>
-          </div>
-          <div class="form-buttons">
-            <button type="submit" class="btn-primary">Save</button>
-            <button
-              type="button"
-              class="btn-secondary"
-              onclick="closeAddModal()"
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-    <!-- ! edit model -->
-    <div id="editModal" class="modal" style="display: none">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2 class="headings">Edit Category</h2>
-          <button class="close-btn" onclick="closeEditModal()">&times;</button>
+              " />
         </div>
-        <form id="editForm" class="modal-form">
-          <input type="hidden" id="editId" />
-          <div class="form-group">
-            <label><span class="required">*</span> Category Name:</label>
-            <input type="text" id="editName" placeholder="Name" required />
-          </div>
-          <div class="form-group">
-            <label><span class="required">*</span> Description:</label>
-            <div id="editDescriptionEditor" style="height: 150px"></div>
-          </div>
-          <div class="form-group">
-            <label>Search Keywords:</label>
-            <input
-              type="text"
-              id="editSearchKeywords"
-              placeholder="Comma separated keywords"
-            />
-          </div>
-          <div class="form-group">
-            <label>Image Link:</label>
-            <input
-              type="text"
-              id="editImageLink"
-              placeholder="URL of category image"
-              oninput="editPreviewImage()"
-            />
-            <img
-              id="editImagePreview"
-              src=""
-              alt="Preview"
-              style="
-                width: 50%;
-                max-height: 200px;
-                margin: 10px 0;
-                display: none;
-                text-align: center;
-                border: 1px solid lightblue;
-              "
-            />
-          </div>
-          <div style="margin-bottom: 10px">
-            <h3
-              style="
+        <div style="margin-bottom: 10px">
+          <h3 style="
                 border-bottom: 1px solid rgb(58, 141, 248);
                 width: 45px;
                 color: rgb(58, 141, 248);
-              "
-            >
-              SEO:
-            </h3>
+              ">
+            SEO:
+          </h3>
+        </div>
+        <div class="form-group">
+          <label><span class="required">*</span> SEO Meta Title:</label>
+          <input type="text" id="addSeoTitle" placeholder="SEO Title" required />
+        </div>
+        <div class="form-group">
+          <label><span class="required">*</span> SEO Keywords:</label>
+          <input type="text" id="addSeoKeywords" placeholder="SEO Keywords (comma separated)" required />
+        </div>
+        <div class="form-group">
+          <label><span class="required">*</span> SEO Meta Description:</label>
+          <input type="text" id="addSeoDescription" placeholder="SEO Description" required />
+        </div>
+        <div class="form-group">
+          <label>Status:</label>
+          <div class="radio-group">
+            <label>
+              Publish
+              <input type="radio" name="publishStatus" value="true" checked />
+              Draft
+              <input type="radio" name="publishStatus" value="false" />
+            </label>
           </div>
-          <div class="form-group">
-            <label>SEO Title:</label>
-            <input
-              type="text"
-              id="editSeoTitle"
-              placeholder="SEO title for category"
-            />
-          </div>
-          <div class="form-group">
-            <label>SEO Keywords:</label>
-            <input
-              type="text"
-              id="editSeoKeywords"
-              placeholder="SEO keywords for category"
-            />
-          </div>
-          <div class="form-group">
-            <label>SEO Description:</label>
-            <textarea
-              id="editSeoDescription"
-              placeholder="SEO description for category"
-              rows="3"
-            ></textarea>
-          </div>
-          <div class="form-group">
-            <label>Status:</label>
-            <div class="radio-group">
-              <label class="ddd">
-                Publish
-                <input
-                  type="radio"
-                  name="editStatus"
-                  value="PUBLISHED"
-                  checked
-                />
-                Draft
-                <input type="radio" name="editStatus" value="DRAFT" />
-              </label>
-            </div>
-          </div>
-
-          <div class="form-buttons">
-            <button
-              type="button"
-              class="btn-secondary"
-              onclick="closeEditModal()"
-            >
-              Cancel
-            </button>
-            <button type="submit" class="btn-primary">Update Category</button>
-          </div>
-        </form>
-      </div>
+        </div>
+        <div class="form-buttons">
+          <button type="submit" class="btn-primary">Save</button>
+          <button type="button" class="btn-secondary" onclick="closeAddModal()">
+            Cancel
+          </button>
+        </div>
+      </form>
     </div>
-    <div id="customAlert" class="custom-alert">
-      <div class="custom-alert-box">
-        <p id="customAlertMessage">This is an alert message.</p>
-        <button onclick="closeCustomAlert()" id="violate-fk">OK</button>
+  </div>
+  <!-- ! edit model -->
+  <div id="editModal" class="modal" style="display: none">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="headings">Edit Category</h2>
+        <button class="close-btn" onclick="closeEditModal()">&times;</button>
       </div>
-    </div>
+      <form id="editForm" class="modal-form">
+        <input type="hidden" id="editId" />
+        <div class="form-group">
+          <label><span class="required">*</span> Category Name:</label>
+          <input type="text" id="editName" placeholder="Name" required />
+        </div>
+        <div class="form-group">
+          <label><span class="required">*</span> Description:</label>
 
-    <script src="./Logout.js"></script>
-    <script src="./category.js"></script>
-  </body>
+          <div id="editDescriptionEditor" style="height: 150px"></div>
+        </div>
+        <div class="form-group">
+          <label>Search Keywords:</label>
+          <input type="text" id="editSearchKeywords" placeholder="Comma separated keywords" />
+        </div>
+        <div class="form-group">
+          <label>Image Link:</label>
+          <input type="text" id="editImageLink" placeholder="URL of category image" required oninput="previewImage()" />
+        </div>
+        <div style="margin-bottom: 10px">
+          <h3 style="
+                border-bottom: 1px solid rgb(58, 141, 248);
+                width: 45px;
+                color: rgb(58, 141, 248);
+              ">
+            SEO:
+          </h3>
+        </div>
+        <div class="form-group">
+          <label>SEO Title:</label>
+          <input type="text" id="editSeoTitle" placeholder="SEO title for category" />
+        </div>
+        <div class="form-group">
+          <label>SEO Keywords:</label>
+          <input type="text" id="editSeoKeywords" placeholder="SEO keywords for category" />
+        </div>
+        <div class="form-group">
+          <label>SEO Description:</label>
+          <textarea id="editSeoDescription" placeholder="SEO description for category" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Status:</label>
+          <div class="radio-group">
+            <label class="ddd">
+              Publish
+              <input type="radio" name="editStatus" value="PUBLISHED" checked />
+              Draft
+              <input type="radio" name="editStatus" value="DRAFT" />
+            </label>
+          </div>
+        </div>
+
+        <div class="form-buttons">
+          <button type="button" class="btn-secondary" onclick="closeEditModal()">
+            Cancel
+          </button>
+          <button type="submit" class="btn-primary">Update Category</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div id="customAlert" class="custom-alert">
+    <div class="custom-alert-box">
+      <p id="customAlertMessage">This is an alert message.</p>
+      <button onclick="closeCustomAlert()" id="violate-fk">OK</button>
+    </div>
+  </div>
+
+  <script src="./Logout.js"></script>
+  <script src="./category.js"></script>
+</body>
+
 </html>
