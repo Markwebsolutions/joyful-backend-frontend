@@ -26,9 +26,6 @@
           <a href="productenquiry.html">Product Enquiry</a>
         </li>
         <li class="nav-item">
-          <a href="csvupload.html">Upload CSV</a>
-        </li>
-        <li class="nav-item">
           <button class="logout" onclick="logout()">Logout</button>
         </li>
       </ul>
@@ -127,6 +124,7 @@
       border: 1px solid lightgreen;
     " />
       </div>
+
       <!-- 🧩 VARIANTS SECTION -->
       <div class="form-group">
         <label><span class="required">*</span>Variants:</label>
@@ -185,7 +183,7 @@
         <label><span class="required">*</span>SEO Meta Description:</label>
         <textarea id="metaDescription" placeholder="Meta Description" required></textarea>
       </div>
-      <div class="form-group">
+      <div class="form-group inline-sm">
         <label>Status *</label>
         <div class="radio-group">
           <label>
@@ -195,6 +193,14 @@
           <label>
             <input type="radio" name="ispublished" value="false" />
             Draft
+          </label>
+        </div>
+      </div>
+      <div class="form-group inline-sm">
+        <label>New Arrival ?</label>
+        <div class="newarrival">
+          <label>
+            YES:<input type="checkbox" id="newArrivalCheckbox" />
           </label>
         </div>
       </div>
