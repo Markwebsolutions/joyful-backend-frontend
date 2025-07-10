@@ -77,3 +77,15 @@
   text-transform: uppercase;
   color: #333;
 }
+.newarrival {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* spacing between label and checkbox */
+}
+
+.newarrival label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: normal;
+}
