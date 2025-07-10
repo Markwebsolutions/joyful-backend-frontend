@@ -46,6 +46,7 @@ function previewHoverImage() {
   img.src = url || "";
   img.style.display = url ? "block" : "none";
 }
+
 function toggleSubcategoryDropdown() {
   if (selectedCategoryIds.length === 0) {
     document.getElementById("subcategoryWarning").style.display = "block";
@@ -297,6 +298,7 @@ async function handleAddProductSubmit(e) {
     metatitle: document.getElementById("metaTitle").value,
     metadescription: document.getElementById("metaDescription").value,
     pagekeywords: document.getElementById("pageKeywords").value,
+    newarrival: document.getElementById("newArrivalCheckbox").checked,
     ispublished:
       document.querySelector('input[name="ispublished"]:checked')?.value ===
       "true",
@@ -335,6 +337,8 @@ async function loadProductForEdit(id) {
       product.producttags || []
     ).join(", ");
     document.getElementById("metaTitle").value = product.metatitle;
+    document.getElementById("newArrivalCheckbox").checked =
+      !!product.newarrival;
     document.getElementById("metaDescription").value = product.metadescription;
     document.getElementById("pageKeywords").value = product.pagekeywords;
     document.querySelector(
@@ -400,12 +404,17 @@ async function loadProductForEdit(id) {
           const html = `
         <div class="variant-block" data-type="Color" id="${variantId}" style="display:flex; align-items:center; gap:10px; margin-bottom:10px; border:1px solid #ccc; padding:10px; border-radius:6px;">
           <strong style="min-width:60px;">Color</strong>
-          <input type="color" class="variant-color-hex" value="${
+         <input type="color" class="variant-color-hex" id="${variantId}-color" value="${
             entry.hex || "#000000"
-          }" required style="width:40px; height:40px; border:none; cursor:pointer;" onchange="updateHexDisplay(this, '${variantId}')" />
-          <span id="${variantId}-hex-code" style="width:80px;">${
+          }"
+  required style="width:40px; height:40px; border:none; cursor:pointer;"
+  onchange="updateHexInput(this, '${variantId}')" />
+<input type="text" id="${variantId}-hex-code" class="variant-hex-input" value="${
             entry.hex || "#000000"
-          }</span>
+          }"
+  style="width:80px;" maxlength="7"
+  oninput="updateColorPicker(this, '${variantId}')" />
+
           <input type="text" placeholder="Color Name" class="variant-color-name" value="${
             entry.name || ""
           }" required style="flex:1;" />
@@ -485,8 +494,12 @@ function addVariantField(type) {
     html = `
       <div class="variant-block" data-type="Color" id="${variantId}" style="display:flex; align-items:center; gap:10px; margin-bottom:10px; border:1px solid #ccc; padding:10px; border-radius:6px;">
         <strong style="min-width:60px;">Color</strong>
-        <input type="color" class="variant-color-hex" required style="width:40px; height:40px; border:none; cursor:pointer;" onchange="updateHexDisplay(this, '${variantId}')" />
-        <span id="${variantId}-hex-code" style="width:80px;">#000000</span>
+<input type="color" class="variant-color-hex" id="${variantId}-color" value="#000000"
+  required style="width:40px; height:40px; border:none; cursor:pointer;"
+  onchange="updateHexInput(this, '${variantId}')" />
+<input type="text" id="${variantId}-hex-code" class="variant-hex-input" value="#000000"
+  style="width:80px;" maxlength="7"
+  oninput="updateColorPicker(this, '${variantId}')" />
         <input type="text" placeholder="Color Name" class="variant-color-name" required style="flex:1;" />
         <input type="url" placeholder="Image URL (required)" class="variant-image" required style="flex:2;" />
         <button type="button" onclick="removeVariant('${variantId}')" title="Remove">❌</button>
@@ -514,4 +527,18 @@ function removeVariant(id) {
 
 function updateHexDisplay(input, id) {
   document.getElementById(`${id}-hex-code`).textContent = input.value;
+}
+function updateHexInput(colorInput, variantId) {
+  const hexInput = document.getElementById(`${variantId}-hex-code`);
+  hexInput.value = colorInput.value.toUpperCase();
+}
+
+function updateColorPicker(hexInput, variantId) {
+  const colorInput = document.getElementById(`${variantId}-color`);
+  const val = hexInput.value.trim();
+
+  // Simple hex validation (# + 3 or 6 hex digits)
+  if (/^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(val)) {
+    colorInput.value = val;
+  }
 }
